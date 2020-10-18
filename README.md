@@ -23,6 +23,13 @@
 |9 | [event.preventDefault()와 event.stopPropagation() 함수의 차이점은 무엇인가?](#event.preventDefault()와-event.stopPropagation()-함수의-차이점은-무엇인가?) |
 |10 | [event.preventDefault()함수가 요소에서 사용되었는지 어떻게 알 수 있는가?](#event.preventDefault()함수가-요소에서-사용되었는지-어떻게-알-수-있는가?) |
 |11 | [obj.someprop.x에서 오류가 발생하는 이유는?](#obj.someprop.x에서-오류가-발생하는-이유는) |
+|12 | [event.target은 무엇입니까?](#event.target은-무엇입니까) |
+|13 | [event.currentTarget은 무엇입니까?](#event.currentTarget은-무엇입니까) |
+|14 | [==와 ===의 차이는 무엇입니까?](#==와-===의-차이는-무엇입니까) |
+|15 | [2개의 속성이 같은 객체를 비교할 때 왜 false를 반환하나요?](#2개의-속성이-같은-객체를-비교할-때-왜-false를-반환하나요?) |
+|16 | [!!연산자는 무엇입니까?](#!!연산자는-무엇입니까) |
+|17 | [한줄에 여러가지 식을 작성하는 방법은?](#한줄에-여러가지-식을-작성하는-방법은) |
+|18 | [호이스팅이란 무엇입니까?](#호이스팅이란-무엇입니까) |
 
 ### 답안
 
@@ -216,3 +223,167 @@
     undefined인 someprop에게 x라는 속성의 호출을 요구한다. 당연히 undefined는 속성을 가질 수 없기 때문에 컴파일 오류를 발생시킨다.
 
     **[⬆ Back to Top](#문제-테이블)**
+
+12. ### event.target은 무엇입니까?
+
+    `e.target`은 이벤트가 발생된 태그 그 자체를 의미한다. 예를 들어 div에서 이벤트가 발생한다면, e.target은 그 div가 될 것이다.
+
+    여기서 three라는 클래스를 가진 div에서 이벤트가 발생한다면, target은 three클래스의 div가 된다.
+
+    ``` javascript
+    <div class="one">
+      <div class="two">
+        <div class="three" onClick="">
+        </div>
+      </div>
+    </div>
+    ```
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+13. ### event.currentTarget은 무엇입니까?
+
+    `e.currentTarget` 은 동일하게 이벤트에 대한 태그를 의미하나, 이벤트가 발생한 태그의 최상위 (부모) 태그를 의미한다.
+
+    three에서 이벤트가 발생했지만, currentTarget은 one이 된다.
+
+    ``` javascript
+    <div class="one">
+      <div class="two">
+        <div class="three" onClick="">
+        </div>
+      </div>
+    </div>
+    ```
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+14. ### ==와 ===의 차이는 무엇입니까?
+
+    `==`는 얕은 비교로써, 피연산자를 자동으로 형변환하여 비교한다.
+    `===`는 형변환없이 그대로 타입과 값을 비교한다.
+
+    == 연산의 경우, 254라는 숫자를 문자열로 변환하여 true를 리턴하게 된다.
+
+    ``` javascript
+    254 == '254'      // return true
+    'true' == true    // return false
+    true == 2         // return false
+
+    254 === '254'     // return false
+    ```
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+15. ### 2개의 속성이 같은 객체를 비교할 때 왜 false를 반환하나요?
+
+    ``` javascript
+    let a = { a: 1 };
+    let b = { a: 1 };
+    let c = a;
+
+    console.log(a === b); // logs false even though they have the same property
+    console.log(a === c); // logs true hmm
+    ```
+
+    객체는 참조에 의해 할당되고 복사되기 때문에, 내부 속성까지 동일해도 선언을 따로 한다면 다른 메모리에서 참조하게된다. 
+    참조란, 메모리에서의 객체의 위치를 가리키는 것이다.
+    
+    때문에 a와 b는 같지 않으며, c의 경우 a의 참조를 똑같이 참조하기 때문에 true를 리턴하게 된다.
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+    
+
+16. ### !!연산자는 무엇입니까?
+
+    !!연산자는, 오른쪽의 값을 bool 타입으로 강제 변환시킨다.
+    아래 코드를 참고
+    
+    ``` javascript
+    console.log(!!null); //logs false
+    console.log(!!undefined); //logs false
+    console.log(!!''); //logs false
+    console.log(!!0); //logs false
+    console.log(!!NaN); //logs false
+    console.log(!!' '); //logs true
+    console.log(!!{}); //logs true
+    console.log(!![]); //logs true
+    console.log(!!1); //logs true
+    console.log(!![].length); //logs false
+    ```
+   
+    **[⬆ Back to Top](#문제-테이블)**
+
+17. ### 한줄에 여러가지 식을 작성하는 방법은?
+    
+    `,`를 통해 한줄에 여러 표현식을 수행할 수 있다. 왼쪽에서 오른쪽으로 수행하며, 마지막 오른쪽 피연산자의 값을 반환한다.
+
+    ``` javascript
+    let x = 5;
+
+    x = (x++ , x = addFive(x), x *= 2, x -= 5, x += 10);
+
+    function addFive(num) {
+      return num + 5;
+    }
+    ```
+   
+    왼쪽 -> 오른쪽으로 진행되므로, `x++` 을 가장 먼저 수행하게 된다.
+
+    1. `x++`로 인해 6 반환
+    2. `addFive(6)` 수행하여 11 반환
+    3. `x *= 2` 수행하여 22 반환
+    4. `x -= 5` 수행하여 17 반환
+    5. `x += 10` 수행하여 27 반환
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+18. ### 호이스팅이란 무엇입니까?
+    
+    변수 또는 함수의 선언부가 코드 최상단으로 끌어올려지는 현상을 의미한다.
+
+    zero가 아래 선언되어있음에도 컴파일 에러가 발생하지 않는 이유는 zero라는 변수가 호이스팅되어 최상단으로 선언부가 끌어올려지기 때문이다.
+
+    ``` javascript
+    console.log(zero); // undefined  ( ?? Why ?? )
+    var zero = 'zero';
+    ```
+    ``` javascript
+    var zero;
+    console.log(zero)
+
+    zero = 'zero';
+    ```
+
+    함수도 마찬가지로 선언부가 호이스팅되어 컴파일 에러를 발생시키지 않는다.
+   
+    ``` javascript
+    sayWow();
+
+    function sayWow() {
+      console.log('wow');
+    }
+    ```
+
+    하지만 함수의 경우 함수 표현식으로 작성했을 경우, 호이스팅하여도 컴파일 에러를 발생시키는데, 
+    이는 함수 표현식의 경우 선언부만 올라가버릴 시 undefined 값을 가지게되며, undefined의 함수호출은 컴파일 에러를 발생시키기 때문이다.
+
+    ``` javascript
+    var sayWow;
+    sayWow();
+    sayWow = function () {
+      console.log('wow');
+    }
+    ```
+    ``` javascript
+    var sayWow;
+    sayWow();
+    sayWow = function () {
+      console.log('wow');
+    }
+    ```
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+    
