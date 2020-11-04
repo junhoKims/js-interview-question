@@ -30,6 +30,9 @@
 |16 | [!!연산자는 무엇입니까?](#!!연산자는-무엇입니까) |
 |17 | [한줄에 여러가지 식을 작성하는 방법은?](#한줄에-여러가지-식을-작성하는-방법은) |
 |18 | [호이스팅이란 무엇입니까?](#호이스팅이란-무엇입니까) |
+|19 | [스코프(Scope)란 무엇입니까?](#스코프(Scope)란-무엇입니까) |
+|20 | [클로저(Closure)란 무엇입니까?](#클로저(Closure)란-무엇입니까) |
+|20 | [Javascript에서 false값을 가지는 것들은 무엇입니까?](#Javascript에서-false값을-가지는-것들은-무엇입니까) |
 
 ### 답안
 
@@ -386,4 +389,86 @@
 
     **[⬆ Back to Top](#문제-테이블)**
 
+19. ### 스코프(Scope)란 무엇입니까?
+
+    Javascript에서의 스코프란 변수 또는 함수에 대해서 유효한 접근 권한이 있는 영역을 뜻합니다. Javascript에는 3가지 유형의 범위가 있다.
+
+    **전역 스코프** - 전역 Space에 선언된 변수 또는 함수. 전역 범위에 있기 때문에 코드의 어떤 곳에서도 접근 하는 것이 가능하다.
+    ``` javascript
+    //global namespace
+    var g = "global";
+
+    function globalFunc(){
+      console.log('test');
+    }  
+    ```
+
+    **함수 스코프** - 함수 내에 선언된 변수 또는 함수. 함수 내부에서 접근이 가능하며 외부에서는 접근할 수 없다.
+    ``` javascript
+    function myFavoriteFunc(a) {
+      var b = 3;
+       return b;
+    }
+
+    console.log(a); // ReferenceError 리턴. a is not undefined
+    console.log(b); // Error 리턴 
+    ```
+
+    **블록 스코프** - {} 내에서 선언된 변수. 보통 let, const로 이루어진 변수는 해당 {} 블록 내에서만 접근할 수 있다.
+    ``` javascript
+    function testBlock(){
+      if(true) {
+        let z = 5;
+      }
+      return z; 
+    }
+
+    testBlock(); // ReferenceError 리턴 "z" is not defined
+    ```
+
+    스코프는 변수를 찾기 위한 규칙이 되기도 한다. 변수가 현재 스코프 안에 존재하지 않으면 외부 스코프에서 변수를 찾아서 검색하고 다시 존재하지 않으면 전역범위에 도착할 때까지 과정을 반복한다.
+    만약 변수를 찾게 된다면 탐색을 중지하고 전역스코프까지 진행해서 찾지 못한다면 오류를 발생시킨다. 이러한 과정을 **스코프 체인**(Scope Chain)이라고 한다.
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+20. ### 클로저(Closure)란 무엇입니까?
+
+    클로저는 기본적으로 함수 선언 시 생성된 스코프로써, 선언 당시의 함수가 스코프 체인의 도움으로 전역 범위에 도달할 때까지 현재 함수의 대한 변수 및 매개변수 함수 등의 참조를 기억하는 기능이다.
+    자유변수를 가질 수 있는 환경에 있는 함수가 클로저다. 여기서 자유변수란 클로저 함수 내부에 생성한 변수도 아니고, 매개변수도 아닌 변수를 의미한다.
+    클로저를 말할 때는 스코프/컨텍스트/자유변수와 함수의 관계를 같이 설명해주어야한다.
+
+    소스코드에서 name은 클로저 함수의 파라미터도 아니고, 클로저 함수 내부에서 생성한 변수도 아니다.
+    이것을 자유변수라고 한다.
+
+    ``` javascript
+    var makeClosure = function() {
+      var name = 'test';
+      return function () {
+        console.log(name);
+      }
+    };
+    var closure = makeClosure(); // function () { console.log(name); }
+    closure(); // 'test';
+    ```
     
+    이것을 컨텍스트로 참고하면 아래 소스코드와 같이 볼 수 있다. `closure = makeClosure()`로 인하여 해당 컨텍스트는 전역컨텍스트와 `makeClosure`함수의 컨텍스트의 변수객체를 포함하게 된다. 때문에 스코프체인을 통해 makeClosure에 있는 변수 (자유변수) name의 참조를 사용할 수 있다.
+
+    ``` javascript
+    "전역 컨텍스트": {
+      scopeChain: ['전역 변수객체'],
+    }
+    "makeClosure 컨텍스트": {
+      scopeChain: ['makeClosure 변수객체', '전역 변수객체'],
+    }
+    "closure 컨텍스트":  {
+      scopeChain: ['closure 변수객체', 'makeClosure 변수객체', '전역 변수객체'],
+    }
+    ```
+
+    **[⬆ Back to Top](#문제-테이블)**
+
+21. ### Javascript에서 false값을 가지는 것들은 무엇입니까?
+
+    값에 !!연산자를 사용하면 확인할 수 있다.
+   
+    **[⬆ Back to Top](#문제-테이블)**
