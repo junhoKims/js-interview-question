@@ -32,7 +32,8 @@
 |18 | [호이스팅이란 무엇입니까?](#호이스팅이란-무엇입니까) |
 |19 | [스코프(Scope)란 무엇입니까?](#스코프(Scope)란-무엇입니까) |
 |20 | [클로저(Closure)란 무엇입니까?](#클로저(Closure)란-무엇입니까) |
-|20 | [Javascript에서 false값을 가지는 것들은 무엇입니까?](#Javascript에서-false값을-가지는-것들은-무엇입니까) |
+|21 | [Javascript에서 false값을 가지는 것들은 무엇입니까?](#Javascript에서-false값을-가지는-것들은-무엇입니까) |
+|22 | ['use strict'란 무엇입니까](#'use-strict'란-무엇입니까) |
 
 ### 답안
 
@@ -470,5 +471,41 @@
 21. ### Javascript에서 false값을 가지는 것들은 무엇입니까?
 
     값에 !!연산자를 사용하면 확인할 수 있다.
+   
+    **[⬆ Back to Top](#문제-테이블)**
+
+22. ### 'use strict'란 무엇입니까?
+
+    `use strict`는 Javascript의 ES5 기능 중 하나이며 함수 또는 전체 Script에서 코드를 엄격하게 만들어줍니다.
+    이는 코드 초기에 버그를 피할 수 있고 코드에 대한 규제를 추가한다.
+
+    - 선언되지 않은 변수의 할당을 막는다.
+    ``` Javascript
+    function returnY() {
+      'use strict';
+      y = 123;
+      return y;
+    }
+    ```
+    - 읽기 전용 또는 쓰기 불가능한 전역 변수에 값 할당을 막는다.
+    ``` Javascript
+    'use strict';
+    var NaN = NaN;
+    var undefined = undefined;
+    var Infinity = 'and beyond';
+    ```
+
+    - 파라미터 변수 이름의 중복을 막는다.
+    ``` Javascript
+    'use strict';
+    function someFunc(a, b, b, c){}
+    ```
+
+    - eval 함수를 사용하여 변수를 생성하는 것을 막는다.
+    ``` Javascript
+    'use strict';
+    evel('var x = 1;');
+    console.log(x) // Throws a Reference Error :: x is not defined
+    ```
    
     **[⬆ Back to Top](#문제-테이블)**
