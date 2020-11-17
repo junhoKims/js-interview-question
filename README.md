@@ -33,7 +33,9 @@
 |19 | [스코프(Scope)란 무엇입니까?](#스코프(Scope)란-무엇입니까) |
 |20 | [클로저(Closure)란 무엇입니까?](#클로저(Closure)란-무엇입니까) |
 |21 | [Javascript에서 false값을 가지는 것들은 무엇입니까?](#Javascript에서-false값을-가지는-것들은-무엇입니까) |
-|22 | ['use strict'란 무엇입니까](#'use-strict'란-무엇입니까) |
+|22 | [값이 거짓인지 확인하는 방법은?](#값이-거짓인지-확인하는-방법은?) |
+|23 | ['use strict'란 무엇입니까](#'use-strict'란-무엇입니까) |
+|24 | [Javascript에서의 'this'는 무엇입니까?](#Javascript에서의-'this'는-무엇입니까?) |
 
 ### 답안
 
@@ -470,11 +472,20 @@
 
 21. ### Javascript에서 false값을 가지는 것들은 무엇입니까?
 
+    해당 자료형과 값들이 기본적으로 false 값을 가진다.
+    ``` Javascript
+    const falsyValues = ['', 0, null, undefined, NaN, false];
+    ```
+   
+    **[⬆ Back to Top](#문제-테이블)**
+
+22. ### 값이 거짓인지 확인하는 방법은?
+
     값에 !!연산자를 사용하면 확인할 수 있다.
    
     **[⬆ Back to Top](#문제-테이블)**
 
-22. ### 'use strict'란 무엇입니까?
+23. ### 'use strict'란 무엇입니까?
 
     `use strict`는 Javascript의 ES5 기능 중 하나이며 함수 또는 전체 Script에서 코드를 엄격하게 만들어줍니다.
     이는 코드 초기에 버그를 피할 수 있고 코드에 대한 규제를 추가한다.
@@ -508,4 +519,104 @@
     console.log(x) // Throws a Reference Error :: x is not defined
     ```
    
+    **[⬆ Back to Top](#문제-테이블)**
+
+24. ### Javascript에서의 'this'는 무엇입니까?
+
+    기본적으로 this는 현재 실행 중이거나 호출하는 함수의 객체 값을 나타낸다.
+    때문에 전역 컨텍스트 상태에서 this는 window를 가리킨다.
+    하지만 특정 객체 내에서는 window가 아닌 특정 객체를 가리키게 된다.
+    즉, 사용되는 컨텍스트에 따라 this가 가리키는 값이 변한다.
+
+    이것은 `carDetails`이라는 객체 내부에서 this를 사용했기 때문에 Ford Mustang를 리턴한다는 것을 쉽게 알 수 있다. this가 `carDetails`를 가리키는 것이다.
+    ``` Javascript
+    const carDetails = {
+      name: "Ford Mustang",
+      getName(){
+        return this.name;
+      },
+    };
+    console.log(carDetails.getName()); // logs Ford Mustang
+    ```
+    <br>
+
+    하지만 이와같은 코드에서는 조금 다르다.  `getCarName` 변수에 this.name을 대입시키고 호출시켜보았는데
+    전역 블록내의 `Ford Ranger`가 호출된다.
+    이는 `getCarName`이라는 변수가 전역 블록에 있기 때문이다. this는 window를 가리키게 되고 window에서 this.name이 `Ford Ranger`이다.
+    ``` Javascript
+    var name = "Ford Ranger";
+    var getCarName = carDetails.getName;
+
+    console.log(getCarName()); // logs Ford Ranger
+    ```
+    <br/>
+
+    해당 코드에서는 `guessThis()`와 `thisIsAnnoying()`이 모두 'test'를 가리키게 된다.
+    this는 호출된 시점의 컨텍스트를 가리키게된다. 아무리 내부에 `getThis()`가 있거니 `myFavoriteObj` 객체에서 시작됬거니 해도 호출한 컨텍스트가 전역 컨텍스트이므로 this는 window를 가리키게 된다.
+    ``` Javascript
+    var name = 'test';
+
+    const myFavoriteObj = {
+      guessThis(){
+        function getThis(){
+          console.log(this.name);
+        }
+        getThis();
+      },
+      name: 'Marko Polo',
+      thisIsAnnoying(callback){
+        callback();
+      }
+    };
+
+    myFavoriteObj.guessThis(); //logs the "window" object
+    myFavoriteObj.thisIsAnnoying(function (){
+      console.log(this.name); //logs the "window" object
+    });
+    ```
+    <br/>
+
+    여기서 객체 내부의 name을 호출하는 방법 중 하나는 `guessThis()` 함수 내부에 변수를 지정하는 것이다.
+    여기서 guessThis함수 내의 this는 myFavoriteObj를 가리키고 getName()함수의 this는 window를 가리키게 되는데, 이는 함수 호출 시에 this가 바인딩할 객체가 동적으로 결정되기 때문이다.
+    엄연히 `myFavoriteObj.guessThis()`를 호출했기에 javascript에서 this를 해당 객체를 가리키고 밑의 getName()은 단순히 window를 가리키게 되는 것이다.
+
+    때문에 guessThis() 안에서 this를 변수에 할당하여 사용하면 객체 내부의 name을 호출하는 것이 가능하다.
+    ``` Javascript
+    const myFavoriteObj = {
+      guessThis(){
+        const self = this;
+
+        function getName(){
+          console.log(self.name);
+        }
+        getName();
+      },
+      name: 'Marko Polo',
+      thisIsAnnoying(callback){
+        callback();
+      }
+    };
+
+    myFavoriteObj.guessThis();
+    ```
+    <br/>
+    두번째 방법은 ES6 `Arrow Function`을 선언하는 것이다.
+    Arrow Function을 사용하면 함수 안의 this는 상위 scope의 this를 가리킨다.  기본 함수 선언시 this가 바인딩할 객체가 동적으로 결정되지만, Arrow 함수의 경우는 정적으로 결정된다. 항상 상위 scope의 this를 가리킨다.
+    이렇게 상위의 scope를 가리키는 것을 (Lexical this) 라고 한다.
+    
+    ``` Javascript
+    const myFavoriteObj = {
+      guessThis(){
+        const getName = () => {
+          console.log(this.name);
+        }
+
+        getName();
+      },
+      name: 'Marko Polo',
+      thisIsAnnoying(callback){
+        callback();
+      }
+    };
+    ```   
     **[⬆ Back to Top](#문제-테이블)**
